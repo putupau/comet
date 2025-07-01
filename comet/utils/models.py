@@ -26,8 +26,8 @@ class AppSettings(BaseSettings):
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
 
-    ADDON_ID: Optional[str] = "stremio.comet.fast"
-    ADDON_NAME: Optional[str] = "Comet"
+    ADDON_ID: Optional[str] = "stremio.casaflix.fast"
+    ADDON_NAME: Optional[str] = "Casaflix"
     FASTAPI_HOST: Optional[str] = "0.0.0.0"
     FASTAPI_PORT: Optional[int] = 8000
     FASTAPI_WORKERS: Optional[int] = 1

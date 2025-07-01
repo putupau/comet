@@ -425,7 +425,7 @@ async def stream(
                     the_stream["sources"] = torrent["sources"]
             else:
                 the_stream["url"] = (
-                    f"{request.url.scheme}://{request.url.netloc}/{b64config}/playback/{info_hash}/{torrent['fileIndex'] if torrent['cached'] and torrent['fileIndex'] is not None else 'n'}/{quote(title)}/{result_season}/{result_episode}/{quote(torrent_title)}"
+                    f"{request.url.scheme}://{request.url.netloc}/{b64config}/proxy/stream/{info_hash}/{torrent['fileIndex'] if torrent['cached'] and torrent['fileIndex'] is not None else 'n'}/{quote(title)}/{result_season}/{result_episode}/{quote(torrent_title)}"
                 )
 
             if torrent["cached"]:
@@ -437,9 +437,9 @@ async def stream(
 
 
 @streams.get(
-    "/{b64config}/playback/{hash}/{index}/{name}/{season}/{episode}/{torrent_name}"
+    "/{b64config}/proxy/stream/{hash}/{index}/{name}/{season}/{episode}/{torrent_name}"
 )
-async def playback(
+async def proxy_stream(
     request: Request,
     b64config: str,
     hash: str,
