@@ -1,5 +1,6 @@
 import aiohttp
 import asyncio
+import base64
 import time
 import mediaflow_proxy.utils.http_utils
 
@@ -517,17 +518,23 @@ async def proxy_stream(
                 },
             )
 
-        if (
-            settings.PROXY_DEBRID_STREAM
-            and settings.PROXY_DEBRID_STREAM_PASSWORD
-            == config["debridStreamProxyPassword"]
-        ):
-            return await custom_handle_stream_request(
-                request.method,
-                download_url,
-                mediaflow_proxy.utils.http_utils.get_proxy_headers(request),
-                media_id=hash,
-                ip=ip,
-            )
+        # *** ¡AQUÍ ESTÁ EL CAMBIO CLAVE! ***
+        if should_proxy: # Ya 'should_proxy' contiene la verificación de contraseña
+            # Importamos la función para codificar la URL del proxy de MediaFlow-Proxy
+            # Necesitas asegurarte de que mediaflow_proxy.utils.http_utils es accesible
+            # y tiene la función base64_encode_url
+            from mediaflow_proxy.utils.http_utils import base64_encode_url
 
+            # Codifica la URL de descarga para pasarla como parámetro al proxy
+            encoded_download_url = base64_encode_url(download_url)
+
+            # Construye la URL final que Stremio DEBE solicitar a Nginx
+            # Esta URL es la que Nginx luego proxyficará a MediaFlow-Proxy
+            # Utiliza COMET_PROXY_URL de tu .env
+            final_proxy_url = f"{settings.COMET_PROXY_URL}?d={encoded_download_url}"
+
+            # Stremio debe ser REDIRECCIONADO a esta URL del proxy.
+            return RedirectResponse(final_proxy_url, status_code=302)
+
+        # Si el proxy no está habilitado o la contraseña no coincide, redirigimos directamente a la URL de descarga
         return RedirectResponse(download_url, status_code=302)
