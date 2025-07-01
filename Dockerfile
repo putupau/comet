@@ -1,7 +1,7 @@
 FROM ghcr.io/astral-sh/uv:python3.11-alpine
-LABEL name="Comet" \
-      description="Stremio's fastest torrent/debrid search add-on." \
-      url="https://github.com/g0ldyy/comet"
+LABEL name="Casaflix" \
+      description="Decentralized shared streaming." \
+      url="https://github.com/putupau/comet"
 
 WORKDIR /app
 
